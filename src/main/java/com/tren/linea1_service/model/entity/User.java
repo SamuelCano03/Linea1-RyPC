@@ -1,5 +1,6 @@
-package com.tren.linea1_service.model.entities;
+package com.tren.linea1_service.model.entity;
 
+import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,10 +8,10 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+@Entity
+@Table(name = "User")
 @Data
 @RequiredArgsConstructor
 

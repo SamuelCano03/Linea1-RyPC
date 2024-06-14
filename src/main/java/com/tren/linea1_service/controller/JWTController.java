@@ -26,7 +26,7 @@ public class JWTController {
     private final TokenProvider tokenProvider;
     private final UserService userService;
 
-    @PostMapping("/token")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> getAccessToken(@RequestBody AuthRequestDTO authRequest) {
         UserProfileDTO validated = userService.validateSignIn(authRequest);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -43,6 +43,12 @@ public class JWTController {
                 .ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .body(authResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity.BodyBuilder logout() {
+        userService.logout();
+        return ResponseEntity.ok();
     }
 
 }

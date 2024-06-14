@@ -7,16 +7,18 @@ import com.tren.linea1_service.mapper.UserMapper;
 import com.tren.linea1_service.model.dto.AuthRequestDTO;
 import com.tren.linea1_service.model.dto.SignupFormDTO;
 import com.tren.linea1_service.model.dto.UserProfileDTO;
-import com.tren.linea1_service.model.entities.User;
+import com.tren.linea1_service.model.entity.User;
 import com.tren.linea1_service.repository.UserRepository;
 import com.tren.linea1_service.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -34,16 +36,11 @@ public class UserService {
         if (emailAlreadyExists) {
             throw new BadRequestException("El email ya está siendo usado por otro usuario.");
         }
-        boolean dniAlreadyExists =
-                userRepository.existsByDni(signupFormDTO.getDni());
-        if (dniAlreadyExists) {
-            throw new BadRequestException("El dni ya está registrado en el sistema.");
-        }
         User user = userMapper.convertToEntity(signupFormDTO);
         user.setName(signupFormDTO.getName());
         user.setLast_name(signupFormDTO.getLastName());
         user.setEmail(signupFormDTO.getEmail());
-        user.setDni(signupFormDTO.getDni());
+        user.setDni(String.valueOf(signupFormDTO.getDni()));
         user.setPassword(passwordEncoder.encode(signupFormDTO.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
@@ -65,5 +62,32 @@ public class UserService {
                 .findOneByEmail(email)
                 .orElseThrow(ResourceNotFoundException::new);
         return userMapper.convertToDTO(user);
+    }
+
+    public UserProfileDTO updatePersonalInfo(UserProfileDTO dto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByEmail(auth.getName()).orElseThrow(ResourceNotFoundException::new);
+        Field[] fields = dto.getClass().getDeclaredFields();
+        for(Field field: fields){
+            field.setAccessible(true);
+            try {
+                Object value = field.get(dto);
+                if(value != null){
+                    Field perInfo = user.getClass().getDeclaredField(field.getName());
+                    perInfo.setAccessible(true);
+                    ReflectionUtils.setField(perInfo,user,value);
+                    perInfo.setAccessible(false);
+                }
+                field.setAccessible(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        userRepository.save(user);
+        return userMapper.convertToDTO(user);
+    }
+
+    public void logout() {
+        SecurityContextHolder.clearContext();
     }
 }

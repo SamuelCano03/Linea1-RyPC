@@ -1,6 +1,6 @@
 package com.tren.linea1_service.security;
 
-import com.tren.linea1_service.model.entities.User;
+import com.tren.linea1_service.model.entity.User;
 import com.tren.linea1_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

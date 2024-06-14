@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class SignupFormDTO {
@@ -16,7 +17,7 @@ public class SignupFormDTO {
     @NotBlank
     private String email;
     @NotBlank
-    private String dni;
+    private MultipartFile dni;
     @NotNull
     @Size(min = 4)
     private String password;
