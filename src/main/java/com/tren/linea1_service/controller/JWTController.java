@@ -28,7 +28,6 @@ public class JWTController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> getAccessToken(@RequestBody AuthRequestDTO authRequest) {
-        UserProfileDTO validated = userService.validateSignIn(authRequest);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 authRequest.getEmail(),
                 authRequest.getPassword()
@@ -36,6 +35,12 @@ public class JWTController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessToken = tokenProvider.createAccessToken(authentication);
+        // String accessToken = "";
+        // try {
+        //     accessToken = tokenProvider.createAccessToken(authentication);
+        // } catch (Exception e) {
+        //     return ResponseEntity.badRequest().build();
+        // }
         UserProfileDTO userProfileDTO = userService.findByEmail(authRequest.getEmail());
         AuthResponseDTO authResponse = new AuthResponseDTO(accessToken, userProfileDTO);
 

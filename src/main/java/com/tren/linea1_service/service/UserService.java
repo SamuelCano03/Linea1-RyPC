@@ -8,12 +8,10 @@ import com.tren.linea1_service.model.dto.AuthRequestDTO;
 import com.tren.linea1_service.model.dto.SignupFormDTO;
 import com.tren.linea1_service.model.dto.UserProfileDTO;
 import com.tren.linea1_service.model.entity.User;
+import com.tren.linea1_service.model.entity.enums.Role;
 import com.tren.linea1_service.repository.UserRepository;
-import com.tren.linea1_service.security.TokenProvider;
+
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,28 +20,25 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private UserMapper userMapper;
 
     public UserProfileDTO signup(SignupFormDTO signupFormDTO, String dni) {
-        boolean emailAlreadyExists =
-                userRepository.existsByEmail(signupFormDTO.getEmail());
+        boolean emailAlreadyExists = userRepository.existsByEmail(signupFormDTO.getEmail());
+
         if (emailAlreadyExists) {
             throw new BadRequestException("El email ya está siendo usado por otro usuario.");
         }
+        
         User user = userMapper.convertToEntity(signupFormDTO);
-        user.setName(signupFormDTO.getName());
-        user.setLast_name(signupFormDTO.getLastName());
-        user.setEmail(signupFormDTO.getEmail());
-        user.setDni(signupFormDTO.getDni());
         user.setDniImage(dni);
         user.setPassword(passwordEncoder.encode(signupFormDTO.getPassword()));
+        user.setRole(Role.USER);
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         return userMapper.convertToDTO(user);

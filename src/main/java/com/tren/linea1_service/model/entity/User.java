@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import com.fasterxml.jackson.databind.annotation.EnumNaming;
+import com.tren.linea1_service.model.entity.enums.Role;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +24,7 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "lastName", nullable = false)
-    private String last_name;
+    private String lastName;
     @Column(name = "dni")
     private String dni;
     @Column(name = "dniImage")
@@ -35,4 +37,6 @@ public class User {
     private LocalDateTime createdAt;
     @Column(name = "verified", nullable = false)
     private boolean verified;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

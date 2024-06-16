@@ -2,7 +2,7 @@ package com.tren.linea1_service.controller;
 
 import com.tren.linea1_service.model.dto.SignupFormDTO;
 import com.tren.linea1_service.model.dto.UserProfileDTO;
-import com.tren.linea1_service.repository.UserRepository;
+// import com.tren.linea1_service.repository.UserRepository;
 import com.tren.linea1_service.service.StorageService;
 import com.tren.linea1_service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,27 @@ public class UserController {
 
     private final UserService userService;
     private final StorageService storageService;
-    private final UserRepository userRepository;
+    // private final UserRepository userRepository;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    public ResponseEntity<UserProfileDTO> signup(@RequestBody @Validated SignupFormDTO signupFormDTO, @RequestParam("file")MultipartFile dni){
-        String path = storageService.store(dni);
+    public ResponseEntity<UserProfileDTO> signup(
+            @RequestParam("name") String name,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("email") String email,
+            @RequestParam("dni") String dni,
+            @RequestParam("password") String password,
+            @RequestParam("file") MultipartFile file) {
+                
+        String path = storageService.store(file);
+        
+        SignupFormDTO signupFormDTO = new SignupFormDTO();
+        signupFormDTO.setName(name);
+        signupFormDTO.setLastName(lastName);
+        signupFormDTO.setEmail(email);
+        signupFormDTO.setDni(dni);
+        signupFormDTO.setPassword(password);
+        
         UserProfileDTO sign = userService.signup(signupFormDTO, path);
         return ResponseEntity.ok(sign);
     }
