@@ -25,6 +25,8 @@ public class User {
     private String last_name;
     @Column(name = "dni")
     private String dni;
+    @Column(name = "dniImage")
+    private String dniImage;
     @Column(name = "email", nullable = false)
     private String email;
     @Column(name = "password", nullable = false)

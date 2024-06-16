@@ -17,6 +17,8 @@ public class SignupFormDTO {
     @NotBlank
     private String email;
     @NotNull
+    private String dni;
+    @NotNull
     @Size(min = 4)
     private String password;
     public String getFullName() {

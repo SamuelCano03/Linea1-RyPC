@@ -28,8 +28,9 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    public ResponseEntity<UserProfileDTO> signup(@RequestBody @Validated SignupFormDTO signupFormDTO){
-        UserProfileDTO sign = userService.signup(signupFormDTO);
+    public ResponseEntity<UserProfileDTO> signup(@RequestBody @Validated SignupFormDTO signupFormDTO, @RequestParam("file")MultipartFile dni){
+        String path = storageService.store(dni);
+        UserProfileDTO sign = userService.signup(signupFormDTO, path);
         return ResponseEntity.ok(sign);
     }
 

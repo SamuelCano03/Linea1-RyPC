@@ -22,6 +22,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +31,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    public UserProfileDTO signup(SignupFormDTO signupFormDTO) {
+    public UserProfileDTO signup(SignupFormDTO signupFormDTO, String dni) {
         boolean emailAlreadyExists =
                 userRepository.existsByEmail(signupFormDTO.getEmail());
         if (emailAlreadyExists) {
@@ -40,9 +41,10 @@ public class UserService {
         user.setName(signupFormDTO.getName());
         user.setLast_name(signupFormDTO.getLastName());
         user.setEmail(signupFormDTO.getEmail());
+        user.setDni(signupFormDTO.getDni());
+        user.setDniImage(dni);
         user.setPassword(passwordEncoder.encode(signupFormDTO.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
-        user.setVerified(false);
         userRepository.save(user);
         return userMapper.convertToDTO(user);
     }
@@ -88,9 +90,8 @@ public class UserService {
     }
 
     public String verify(String path) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(auth.getName()).orElseThrow(ResourceNotFoundException::new);
-        user.setDni(path);
+        User user = userRepository.findByEmail("email@email.com").orElseThrow(ResourceNotFoundException::new);
+        user.setDniImage(path);
         user.setVerified(true);
         userRepository.save(user);
         return "Usuario verificado";
