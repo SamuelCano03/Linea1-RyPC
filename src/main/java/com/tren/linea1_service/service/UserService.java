@@ -10,6 +10,8 @@ import com.tren.linea1_service.model.dto.UserProfileDTO;
 import com.tren.linea1_service.model.entity.User;
 import com.tren.linea1_service.repository.UserRepository;
 import com.tren.linea1_service.security.TokenProvider;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -24,11 +26,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private UserMapper userMapper;
-    private TokenProvider tokenProvider;
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     public UserProfileDTO signup(SignupFormDTO signupFormDTO) {
         boolean emailAlreadyExists =
@@ -40,15 +40,15 @@ public class UserService {
         user.setName(signupFormDTO.getName());
         user.setLast_name(signupFormDTO.getLastName());
         user.setEmail(signupFormDTO.getEmail());
-        user.setDni(String.valueOf(signupFormDTO.getDni()));
         user.setPassword(passwordEncoder.encode(signupFormDTO.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
+        user.setVerified(false);
         userRepository.save(user);
         return userMapper.convertToDTO(user);
     }
 
     public UserProfileDTO validateSignIn(AuthRequestDTO authRequestDTO) {
-        User user = userRepository.findOneByEmail(authRequestDTO.getEmail())
+        User user = userRepository.findByEmail(authRequestDTO.getEmail())
                 .orElseThrow(() -> new InvalidCredentialsException("Correo o contraseña invalidos"));
 
         if (user == null || !passwordEncoder.matches(authRequestDTO.getPassword(), user.getPassword())) {
@@ -59,14 +59,14 @@ public class UserService {
 
     public UserProfileDTO findByEmail(String email) {
         User user = userRepository
-                .findOneByEmail(email)
+                .findByEmail(email)
                 .orElseThrow(ResourceNotFoundException::new);
         return userMapper.convertToDTO(user);
     }
 
     public UserProfileDTO updatePersonalInfo(UserProfileDTO dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findOneByEmail(auth.getName()).orElseThrow(ResourceNotFoundException::new);
+        User user = userRepository.findByEmail(auth.getName()).orElseThrow(ResourceNotFoundException::new);
         Field[] fields = dto.getClass().getDeclaredFields();
         for(Field field: fields){
             field.setAccessible(true);
@@ -85,6 +85,15 @@ public class UserService {
         }
         userRepository.save(user);
         return userMapper.convertToDTO(user);
+    }
+
+    public String verify(String path) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(auth.getName()).orElseThrow(ResourceNotFoundException::new);
+        user.setDni(path);
+        user.setVerified(true);
+        userRepository.save(user);
+        return "Usuario verificado";
     }
 
     public void logout() {

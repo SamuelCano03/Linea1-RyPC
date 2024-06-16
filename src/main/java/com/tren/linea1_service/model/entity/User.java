@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "User")
+@Table(name = "Users")
 @Data
 @RequiredArgsConstructor
 
@@ -23,7 +23,7 @@ public class User {
     private String name;
     @Column(name = "lastName", nullable = false)
     private String last_name;
-    @Column(name = "dni", nullable = false)
+    @Column(name = "dni")
     private String dni;
     @Column(name = "email", nullable = false)
     private String email;
@@ -31,6 +31,6 @@ public class User {
     private String password;
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt;
-    @Column(name = "token", nullable = false)
-    private String token;
+    @Column(name = "verified", nullable = false)
+    private boolean verified;
 }

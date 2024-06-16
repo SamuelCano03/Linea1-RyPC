@@ -16,8 +16,6 @@ public class SignupFormDTO {
     @Email
     @NotBlank
     private String email;
-    @NotBlank
-    private MultipartFile dni;
     @NotNull
     @Size(min = 4)
     private String password;

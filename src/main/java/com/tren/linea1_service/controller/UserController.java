@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,9 +28,8 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
-    public ResponseEntity<UserProfileDTO> signup(@RequestBody @Validated SignupFormDTO signupFormDTO) {
+    public ResponseEntity<UserProfileDTO> signup(@RequestBody @Validated SignupFormDTO signupFormDTO){
         UserProfileDTO sign = userService.signup(signupFormDTO);
-        String path = storageService.store(signupFormDTO.getDni());
         return ResponseEntity.ok(sign);
     }
 
@@ -42,6 +42,13 @@ public class UserController {
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(resource);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyUser(@RequestParam("file") MultipartFile dni) {
+        String path = storageService.store(dni);
+        String response = userService.verify(path);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/personalinfo")

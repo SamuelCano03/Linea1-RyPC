@@ -42,7 +42,7 @@ public class TokenProvider {
 
     public String createAccessToken(Authentication authentication) {
         String email = authentication.getName();
-        Optional<User> user = userRepository.findOneByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         if(user.isEmpty()) {
             throw new ResourceNotFoundException("Email no encontrado");
         }
