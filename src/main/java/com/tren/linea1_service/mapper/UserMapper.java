@@ -1,24 +1,20 @@
 package com.tren.linea1_service.mapper;
 
-import com.tren.linea1_service.model.dto.SignupFormDTO;
-import com.tren.linea1_service.model.dto.UserProfileDTO;
-import com.tren.linea1_service.model.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
+
+import com.tren.linea1_service.dto.RegisterRequestDTO;
+import com.tren.linea1_service.dto.UserProfileDTO;
+import com.tren.linea1_service.model.User;
 
 @Component
 @AllArgsConstructor
-
-
 public class UserMapper {
+    private final ModelMapper modelMapper;
 
-    private final ModelMapper modelMapper = new ModelMapper();
-
-    public User convertToEntity(SignupFormDTO signupFormDTO){
-        return modelMapper.map(signupFormDTO, User.class);
+    public User convertToEntity(RegisterRequestDTO registerDTO){
+        return  modelMapper.map(registerDTO, User.class);
     }
 
     public UserProfileDTO convertToDTO(User user){

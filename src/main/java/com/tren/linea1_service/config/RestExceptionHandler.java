@@ -1,6 +1,6 @@
 package com.tren.linea1_service.config;
 
-import com.tren.linea1_service.exception.*;
+import com.tren.linea1_service.exceptions.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -40,8 +40,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResorceNotFoundException(ResourceNotFoundException ex){
-        return ProblemDetail.
-                forStatusAndDetail(HttpStatus.NOT_FOUND,"El recurso no ha sido encontrado");
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,"El recurso no ha sido encontrado");
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -49,23 +48,8 @@ public class RestExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler(InsufficientBalanceException.class)
-    public ProblemDetail handleInsufficientBalanceException(InsufficientBalanceException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
     @ExceptionHandler(InternalServerException.class)
     public ProblemDetail handleInternalServerException(InternalServerException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidDateRangeException.class)
-    public ProblemDetail handleInvalidDateRangeException(InvalidDateRangeException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ProblemDetail handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }
