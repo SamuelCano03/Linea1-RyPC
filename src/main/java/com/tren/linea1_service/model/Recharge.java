@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Random;
 
-import org.springframework.cglib.core.Local;
 
 import com.tren.linea1_service.model.enums.PaymentMethod;
 import com.tren.linea1_service.model.enums.RechargeStatus;

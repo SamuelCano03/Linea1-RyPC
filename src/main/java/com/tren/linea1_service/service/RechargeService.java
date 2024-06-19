@@ -3,7 +3,9 @@ package com.tren.linea1_service.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,7 @@ public class RechargeService {
     private final RechargeRepository rechargeRepository;
     private final UserService userService;
     private final MockPaymentService mockPaymentService;
+    private final EmailSenderService emailService;
 
     @Transactional
     public RechargeResponseDTO rechargeCardViaCard(CardRechargeRequestDTO cardRechargeRequestDTO) {
@@ -55,6 +58,7 @@ public class RechargeService {
         if (paymentAPIResponseDTO.isSuccess()) {
             recharge.setStatus(RechargeStatus.SUCCESS);
             card.setBalance(card.getBalance().add(recharge.getAmount()));
+            sendEmail(recharge, card, user);
             cardRepository.save(card);
         } else {
             recharge.setStatus(RechargeStatus.REJECTED);
@@ -85,6 +89,7 @@ public class RechargeService {
         if (paymentAPIResponseDTO.isSuccess()) {
             recharge.setStatus(RechargeStatus.SUCCESS);
             card.setBalance(card.getBalance().add(recharge.getAmount()));
+            sendEmail(recharge, card, user);
             cardRepository.save(card);
         } else {
             recharge.setStatus(RechargeStatus.REJECTED);
@@ -107,6 +112,16 @@ public class RechargeService {
         List<Recharge> recharges = rechargeRepository.findByCardNumber(cardNumber)
                             .orElseThrow(() -> new ResourceNotFoundException("This card has not made any recharges yet"));
         return rechargeMapper.convertToDTOList(recharges);
+    }
+
+    private void sendEmail(Recharge recharge, Card card, User user) {
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("cardNumber", card.getCardNumber());
+            emailVariables.put("amount", recharge.getAmount());
+            emailVariables.put("date", recharge.getCreatedDate());
+            emailVariables.put("voucher", recharge.getVoucherNumber());
+            emailVariables.put("balance", card.getBalance());
+            emailService.sendEmail(user.getEmail(), "Recarga realizada", "successfullRecharge", emailVariables);
     }
 }
 
