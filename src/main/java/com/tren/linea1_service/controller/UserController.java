@@ -3,6 +3,7 @@ package com.tren.linea1_service.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tren.linea1_service.dto.ChangePassRequestDTO;
 import com.tren.linea1_service.dto.UserProfileDTO;
 import com.tren.linea1_service.service.UserService;
 
@@ -10,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RequiredArgsConstructor
@@ -25,6 +29,12 @@ public class UserController {
     public ResponseEntity<UserProfileDTO> getUserProfile() {
         UserProfileDTO profile = userService.getUserProfile();
         return new ResponseEntity<>(profile, HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Validated @RequestBody ChangePassRequestDTO changePassRequestDTO) {
+        userService.resetPassword(changePassRequestDTO);
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
     
 }

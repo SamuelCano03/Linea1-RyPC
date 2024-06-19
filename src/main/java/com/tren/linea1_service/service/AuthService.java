@@ -47,9 +47,14 @@ public class AuthService {
     public UserProfileDTO register(RegisterRequestDTO request) {
 
         boolean emailAlreadyExists = userRepository.existsByEmail(request.getEmail());
+        boolean dniAlreadyExists = userRepository.existsByDni(request.getDni());
 
         if (emailAlreadyExists) {
             throw new BadRequestException("El email ya está siendo usado por otro usuario.");
+        }
+
+        if (dniAlreadyExists) {
+            throw new BadRequestException("El DNI ya está siendo usado por otro usuario.");
         }
 
         User user = userMapper.convertToEntity(request);

@@ -40,7 +40,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResorceNotFoundException(ResourceNotFoundException ex){
-        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,"El recurso no ha sido encontrado");
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)

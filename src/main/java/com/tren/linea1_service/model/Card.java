@@ -30,7 +30,13 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private CardType cardType;
 
+    @Column(name = "vinculated",nullable = false)
+    private boolean vinculated;
+
+    @Column(name = "blocked",nullable = false)
+    private boolean blocked;
+
     @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

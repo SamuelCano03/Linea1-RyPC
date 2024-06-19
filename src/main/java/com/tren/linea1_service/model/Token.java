@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tokens")
 public class Token {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Integer id;
+  public Long id;
 
-  @Column(unique = true, nullable = false)
+  @Column(unique = true, nullable = false, length = 500)
   public String token;
 
   @Enumerated(EnumType.STRING)
