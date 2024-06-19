@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/users/signup", "/auth/login", "/users/verify").permitAll() // Permitir sin autenticación
+                        .requestMatchers("/users/signup", "/auth/login", "/users/verify", "/coupons/all", "/coupons/add").permitAll() // Permitir sin autenticación
                         // Incluir rutas adicionales
                         .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         .anyRequest()
