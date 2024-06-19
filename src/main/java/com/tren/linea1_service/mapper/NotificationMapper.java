@@ -1,11 +1,8 @@
 package com.tren.linea1_service.mapper;
 
-import com.tren.linea1_service.model.dto.NotificationRequestDTO;
-import com.tren.linea1_service.model.dto.NotificationResponseDTO;
-import com.tren.linea1_service.model.dto.SignupFormDTO;
-import com.tren.linea1_service.model.dto.UserProfileDTO;
-import com.tren.linea1_service.model.entity.Notification;
-import com.tren.linea1_service.model.entity.User;
+import com.tren.linea1_service.dto.NotificationRequestDTO;
+import com.tren.linea1_service.dto.NotificationResponseDTO;
+import com.tren.linea1_service.model.Notification;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

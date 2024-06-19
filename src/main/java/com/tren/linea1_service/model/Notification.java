@@ -1,4 +1,4 @@
-package com.tren.linea1_service.model.entity;
+package com.tren.linea1_service.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,4 +26,6 @@ public class Notification {
     private String description;
     @Column(name = "notification_date")
     private LocalDateTime notificationDate;
+    @Column(name = "read")
+    private boolean read;
 }

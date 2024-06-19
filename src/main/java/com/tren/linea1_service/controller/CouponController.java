@@ -1,8 +1,8 @@
 package com.tren.linea1_service.controller;
 
-import com.tren.linea1_service.model.dto.CouponRequestDTO;
-import com.tren.linea1_service.model.dto.CouponResponseDTO;
-import com.tren.linea1_service.model.entity.Coupon;
+import com.tren.linea1_service.dto.CouponRequestDTO;
+import com.tren.linea1_service.dto.CouponResponseDTO;
+import com.tren.linea1_service.model.Coupon;
 import com.tren.linea1_service.service.CouponService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

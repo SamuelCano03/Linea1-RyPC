@@ -32,7 +32,9 @@ public class UserService {
 
     @Transactional
     public void resetPassword(String password, String newPassword) {
-        User user = userRepository.findUserByEmail(email)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository.findUserByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setPassword(newPassword);
         userRepository.save(user);

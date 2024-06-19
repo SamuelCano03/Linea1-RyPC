@@ -1,7 +1,6 @@
 package com.tren.linea1_service.repository;
 
-import com.tren.linea1_service.model.entity.Coupon;
-import com.tren.linea1_service.model.entity.User;
+import com.tren.linea1_service.model.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

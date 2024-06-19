@@ -1,16 +1,13 @@
 package com.tren.linea1_service.controller;
 
-import com.tren.linea1_service.model.dto.NotificationRequestDTO;
-import com.tren.linea1_service.model.dto.NotificationResponseDTO;
-import com.tren.linea1_service.model.dto.SignupFormDTO;
-import com.tren.linea1_service.model.dto.UserProfileDTO;
-import com.tren.linea1_service.model.entity.Notification;
+import com.tren.linea1_service.dto.NotificationRequestDTO;
+import com.tren.linea1_service.dto.NotificationResponseDTO;
+import com.tren.linea1_service.model.Notification;
 import com.tren.linea1_service.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,7 +17,7 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
-    @GetMapping("/all")
+    @PostMapping("/all")
     public ResponseEntity<List<NotificationResponseDTO>> getAllNotifications(){
         List<NotificationResponseDTO> not = notificationService.pushNotifications();
         return ResponseEntity.ok(not);

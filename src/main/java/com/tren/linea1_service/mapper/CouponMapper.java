@@ -1,11 +1,8 @@
 package com.tren.linea1_service.mapper;
 
-import com.tren.linea1_service.model.dto.CouponRequestDTO;
-import com.tren.linea1_service.model.dto.CouponResponseDTO;
-import com.tren.linea1_service.model.dto.NotificationRequestDTO;
-import com.tren.linea1_service.model.dto.NotificationResponseDTO;
-import com.tren.linea1_service.model.entity.Coupon;
-import com.tren.linea1_service.model.entity.Notification;
+import com.tren.linea1_service.dto.CouponRequestDTO;
+import com.tren.linea1_service.dto.CouponResponseDTO;
+import com.tren.linea1_service.model.Coupon;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
