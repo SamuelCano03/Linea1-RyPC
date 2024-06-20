@@ -39,5 +39,5 @@ public class CardRechargeRequestDTO {
     private String cvv;
 
     @NotNull(message = "El monto no puede estar vacio")
-    private Double amount;
+    private Double rechargedAmount;
 }

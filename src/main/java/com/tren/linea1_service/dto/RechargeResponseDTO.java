@@ -12,6 +12,6 @@ public class RechargeResponseDTO {
     private String time;
     private String voucher;
     private String cardNumber;
-    private String amount;
+    private String rechargedAmount;
     private String status;
 }

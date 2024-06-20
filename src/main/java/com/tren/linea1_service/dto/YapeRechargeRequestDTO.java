@@ -20,5 +20,5 @@ public class YapeRechargeRequestDTO {
     private String otp;
 
     @NotNull(message = "El monto no puede estar vacio")
-    private Double amount;
+    private Double rechargedAmount;
 }

@@ -33,8 +33,14 @@ public class Recharge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    @Column(name = "recharged_amount", nullable = false)
+    private BigDecimal rechargedAmount;
+
+    @Column(name = "paid_amount", nullable = false)
+    private BigDecimal paidAmount;
+
+    @Column(name = "discount_amount", nullable = false)
+    private BigDecimal discountAmount;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

@@ -35,11 +35,12 @@
 <div class="container">
     <h1>Recarga realizada exitosamente</h1>
     <p>Estimado usuario,</p>
-    <p>Le informamos que se ha realizado una recarga en su tarjeta de tren con los siguientes detalles:</p>
+    <p>Le informamos que se ha realizado una recarga en su tarjeta de la Linea 1 del metro de lima con los siguientes detalles:</p>
     <ul>
         <li>Número de voucher: <span th:text="${voucher}"></span></li>
         <li>Número de tarjeta: <span th:text="${cardNumber}"></span></li>
         <li>Monto recargado: <span th:text="${amount}"></span></li>
+        <li>Monto pagado: <span th:text="${payment}"></span></li>
         <li>Fecha de recarga: <span th:text="${date}"></span></li>
         <li>Saldo actual <span th:text="${balance}"></span></li>
     </ul>
