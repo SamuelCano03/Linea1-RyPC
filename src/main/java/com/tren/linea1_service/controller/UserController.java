@@ -31,9 +31,9 @@ public class UserController {
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Validated @RequestBody ChangePassRequestDTO changePassRequestDTO) {
-        userService.resetPassword(changePassRequestDTO);
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePassRequestDTO changePassRequestDTO) {
+        userService.changePassword(changePassRequestDTO);
         return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
     

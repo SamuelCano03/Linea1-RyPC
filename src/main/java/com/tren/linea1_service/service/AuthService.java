@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tren.linea1_service.dto.AuthRequestDTO;
 import com.tren.linea1_service.dto.AuthResponseDTO;
 import com.tren.linea1_service.dto.RegisterRequestDTO;
+import com.tren.linea1_service.dto.ResetPassRequestDTO;
 import com.tren.linea1_service.dto.UserProfileDTO;
+import com.tren.linea1_service.dto.VerificationRequestDTO;
 import com.tren.linea1_service.exceptions.BadRequestException;
 import com.tren.linea1_service.mapper.UserMapper;
 import com.tren.linea1_service.repository.TokenRepository;
@@ -27,9 +29,15 @@ import org.springframework.stereotype.Service;
 
 import com.tren.linea1_service.model.Token;
 import com.tren.linea1_service.model.User;
+import com.tren.linea1_service.model.VerificationToken;
 import com.tren.linea1_service.model.enums.Role;
 import com.tren.linea1_service.model.enums.TokenType;
+import java.util.Map;
 
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -37,8 +45,10 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final VerificationTokenService verificationTokenService;
 
     private final PasswordEncoder passwordEncoder;
+    private final EmailSenderService emailSenderService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
@@ -62,12 +72,16 @@ public class AuthService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
+        user.setEnabled(false);
         user.setRole(Role.USER);
         user.setCreatedAt(java.time.LocalDate.now());
-
-
         userRepository.save(user);
+
+        String token = verificationTokenService.createVerificationToken(user);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", user.getFirstName() + " " + user.getLastName());
+        variables.put("token", token);
+        emailSenderService.sendEmail(user.getEmail(),"Verificación de correo electrónico","verificationEmail",variables);
         return userMapper.convertToDTO(user);
     }
 
@@ -80,14 +94,75 @@ public class AuthService {
                 request.getPassword()
             )
         );
+        
         User user = userRepository.findUserByEmail(request.getEmail())
             .orElseThrow();
-        String jwtToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);     
         saveUserToken(user, jwtToken);
         return new AuthResponseDTO(jwtToken, refreshToken, userMapper.convertToDTO(user));
     }
+
+    @Transactional 
+    public UserProfileDTO verifyEmail(String token) {
+        VerificationToken verificationTokenOpt  = verificationTokenService.getVerificationToken(token)
+            .orElseThrow(() -> new BadRequestException("The token is invalid"));
+
+        if (verificationTokenOpt.getExpirationDate().isBefore(LocalDateTime.now(ZoneId.systemDefault()))) {
+            verificationTokenService.deleteVerificationToken(token);
+            throw new BadRequestException("The token has expired");
+        }
+
+        User user = verificationTokenOpt.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
+        verificationTokenService.deleteVerificationToken(token);
+        return userMapper.convertToDTO(user);
+    }
+
+    @Transactional
+    public void resendVerificationEmail(VerificationRequestDTO verificationRequestDTO) {
+        User user = userRepository.findUserByEmail(verificationRequestDTO.getEmail())
+            .orElseThrow(() -> new BadRequestException("The user does not exist"));
+        if (user.isEnabled()) {
+            throw new BadRequestException("The user is already verified");
+        }
+        // eliminamos el token anterior
+        verificationTokenService.deleteVerificationTokenByUser(user.getEmail());
+        String token = verificationTokenService.createVerificationToken(user);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", user.getFirstName() + " " + user.getLastName());
+        variables.put("token", token);
+        emailSenderService.sendEmail(user.getEmail(),"Verificación de correo electrónico","verificationEmail",variables);
+    }
+
+    @Transactional
+    public void sendPasswordResetEmail(VerificationRequestDTO verificationRequestDTO) {
+        User user = userRepository.findUserByEmail(verificationRequestDTO.getEmail())
+            .orElseThrow(() -> new BadRequestException("The user does not exist"));
+        String token = verificationTokenService.createVerificationToken(user);
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", user.getFirstName() + " " + user.getLastName());
+        variables.put("token", token);
+        emailSenderService.sendEmail(user.getEmail(),"Recuperación de contraseña","passwordResetEmail",variables);
+    }
+
+    @Transactional
+    public void resetPassword(ResetPassRequestDTO resetPassRequestDTO) {
+        VerificationToken verificationTokenOpt = verificationTokenService.getVerificationToken(resetPassRequestDTO.getToken())
+            .orElseThrow(() -> new BadRequestException("The token is invalid"));
+
+        if (verificationTokenOpt.getExpirationDate().isBefore(LocalDateTime.now(ZoneId.systemDefault()))) {
+            verificationTokenService.deleteVerificationToken(resetPassRequestDTO.getToken());
+            throw new BadRequestException("The token has expired");
+        }
+
+        User user = verificationTokenOpt.getUser();
+        user.setPassword(passwordEncoder.encode(resetPassRequestDTO.getNewPassword()));
+        userRepository.save(user);
+        verificationTokenService.deleteVerificationToken(resetPassRequestDTO.getToken());
+    } 
 
     public void refreshToken(
             HttpServletRequest request,

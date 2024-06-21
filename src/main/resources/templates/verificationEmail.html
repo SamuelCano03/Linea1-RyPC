@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de Correo Electrónico</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+        .content {
+            font-size: 16px;
+            color: #333333;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<!--         <div class="logo">
+            <img src="https://example.com/logo.png" alt="Logo">
+        </div> -->
+        <div class="content">
+            <p>Estimado/a <span th:text="${name}">Usuario</span>,</p>
+            <p>Gracias por registrarte en nuestra plataforma. Por favor, verifica tu dirección de correo electrónico haciendo clic en el siguiente botón:</p>
+            <p style="text-align: center;">
+                <a class="button" th:href="@{http://localhost:8080/api/v1/auth/verify?token=__${token}__}" target="_blank">Verificar Correo Electrónico</a>
+            </p>
+            <p>Si el botón no funciona, también puedes copiar y pegar el siguiente enlace en tu navegador:</p>
+            <p th:text="@{http://localhost:8080/api/v1/auth/verify?token=__${token}__}"</p>
+        </div>
+        <div class="footer">
+            <p>Gracias,<br>El equipo de la Línea 1 del metro de Lima</p>
+        </div>
+    </div>
+</body>
+</html>

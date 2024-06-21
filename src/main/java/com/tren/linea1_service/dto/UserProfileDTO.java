@@ -13,4 +13,5 @@ public class UserProfileDTO {
     private String email;
     private String dni;
     private String role;
+    private boolean enabled;
 }

@@ -32,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(ChangePassRequestDTO request) {
+    public void changePassword(ChangePassRequestDTO request) {
         User user = getUserByAuth();
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadRequestException("Invalid password");

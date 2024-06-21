@@ -32,7 +32,6 @@ private final Set<Permission> permissions;
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toList());
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-        System.out.println("authorities: " + authorities);
         return authorities;
 }
 }
