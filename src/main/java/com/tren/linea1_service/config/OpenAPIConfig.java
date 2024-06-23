@@ -16,7 +16,7 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class OpenAPIConfig {
 
-    @Value("${tren.openapi.dev-url}")
+    @Value("tren.openapi.dev-url")
     private String devUrl;
 
     @Bean

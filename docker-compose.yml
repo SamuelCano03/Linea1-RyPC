@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  java_app:
+    container_name: java_app
+    image: linea1-back:1.0.0
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_APPLICATION_NAME=linea1-service
+      - SERVER_SERVLET_CONTEXT_PATH=/api/v1
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://java_db:5432/linea1db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - JWT_SECRET=chLhMF9w3mwDutysbQxsX8x4CGwZef4mayTGSmbAG2BUsXbYFKvXrVfnPCa62PJxp9TuHxx4PQAS2yGUTBAPy3Dy53j8Uj2wb2AQ3nK8VLg7tUx9HCzHATEp
+      - JWT_EXPIRATION=86400000
+      - JWT_REFRESH_TOKEN_EXPIRATION=604800000
+    depends_on:
+      - java_db
+  java_db:
+    container_name: java_db
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=linea1db
