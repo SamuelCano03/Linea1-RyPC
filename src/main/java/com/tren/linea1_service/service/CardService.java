@@ -77,7 +77,7 @@ public class CardService {
     }
 
     @Transactional
-    public void blockCard(CardStateChangeDTO cardStateChangeDTO) {
+    public CardDetailsDTO blockCard(CardStateChangeDTO cardStateChangeDTO) {
         User user = userService.getUserByAuth();
         Card card = cardRepository.findByCardNumberAndUserEmail(cardStateChangeDTO.getCardNumber(), user.getEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("Card is not vinculated to user"));
@@ -89,10 +89,11 @@ public class CardService {
         }
         card.setBlocked(true);
         cardRepository.save(card);
+        return cardMapper.convertToDTO(card);
     }
 
     @Transactional
-    public void unlinkCard(CardStateChangeDTO cardStateChangeDTO) {
+    public CardDetailsDTO unlinkCard(CardStateChangeDTO cardStateChangeDTO) {
         User user = userService.getUserByAuth();
         Card card = cardRepository.findByCardNumberAndUserEmail(cardStateChangeDTO.getCardNumber(), user.getEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("Card is not vinculated to user"));
@@ -102,6 +103,7 @@ public class CardService {
         card.setVinculated(false);
         card.setUser(null);
         cardRepository.save(card);
+        return cardMapper.convertToDTO(card);
     }
     
 }

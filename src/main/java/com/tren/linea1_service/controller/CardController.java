@@ -55,16 +55,16 @@ public class CardController {
     }
 
     @PutMapping("/block")
-    public ResponseEntity<String> blockCard(@Validated @RequestBody 
+    public ResponseEntity<CardDetailsDTO> blockCard(@Validated @RequestBody 
                                             CardStateChangeDTO cardStateChangeDTO) {
-        cardService.blockCard(cardStateChangeDTO);
-        return new ResponseEntity<>("Card blocked", HttpStatus.OK);
+        CardDetailsDTO card = cardService.blockCard(cardStateChangeDTO);
+        return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
     @PutMapping("/unlink")
-    public ResponseEntity<String> unlinkCard(@Validated @RequestBody 
+    public ResponseEntity<CardDetailsDTO> unlinkCard(@Validated @RequestBody 
                                             CardStateChangeDTO cardStateChangeDTO) {
-        cardService.unlinkCard(cardStateChangeDTO);
-        return new ResponseEntity<>("Card unlinked", HttpStatus.OK);
+        CardDetailsDTO card = cardService.unlinkCard(cardStateChangeDTO);
+        return new ResponseEntity<>(card, HttpStatus.OK);
     }
 }

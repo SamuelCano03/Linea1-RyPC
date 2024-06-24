@@ -59,10 +59,14 @@ public class CouponService {
         }
         List<Coupon> coupons = couponRepository.findByCodeAndUserIsNull(code)
                     .orElseThrow(()-> new ResourceNotFoundException("Coupon not found"));
-        Coupon coupon = coupons.get(0);
-        coupon.setUser(user);
-        couponRepository.save(coupon);
-        return couponMapper.convertToDTO(coupon);
+        if (!coupons.isEmpty()) {
+            Coupon coupon = coupons.get(0);
+            coupon.setUser(user);
+            couponRepository.save(coupon);
+            return couponMapper.convertToDTO(coupon);
+        } else {
+            throw new ResourceNotFoundException("Coupon not found");
+        }        
     }
 
     @Transactional(readOnly = true)

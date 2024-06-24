@@ -11,4 +11,5 @@ public class CardDetailsDTO {
     private String cardNumber;
     private String cardType;
     private String balance;
+    private boolean blocked;
 }

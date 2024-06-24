@@ -13,8 +13,8 @@ public class MockPaymentService {
 
     public PaymentAPIResponseDTO processPaymentCard(CardRechargeRequestDTO request) {
         Random random = new Random();
-        boolean paymentSuccess = random.nextBoolean();
-
+       /*  boolean paymentSuccess = random.nextBoolean(); */
+        boolean paymentSuccess = true;
         simulateDelay(1000);
         if (paymentSuccess) {
             return new PaymentAPIResponseDTO(true,generateTransactionId() , "Payment successful");

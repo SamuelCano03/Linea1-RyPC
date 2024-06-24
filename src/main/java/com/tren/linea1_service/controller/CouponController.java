@@ -30,7 +30,7 @@ public class CouponController {
         return new ResponseEntity<>("Coupons deleted", HttpStatus.OK);
     }
 
-    @PutMapping("add")
+    @PutMapping("/add")
     public ResponseEntity<CouponResponseDTO> addCoupon(@RequestParam String code){
         CouponResponseDTO cupon = couponService.addCoupon(code);
         return new ResponseEntity<>(cupon, HttpStatus.OK);
